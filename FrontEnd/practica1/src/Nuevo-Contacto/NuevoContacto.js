@@ -1,11 +1,26 @@
 import React, { useState } from 'react'
 import {useForm} from 'react-hook-form'
+import './style.css';
+import DEFAULT_URL from '../utils/url';
+
+const API = DEFAULT_URL;
 
 const NuevoContacto = () => {
   const { register, handleSubmit, formState: {errors}} = useForm()
-  const customSubmit = (data) => {
-    //console.log(data)
-    alert("¡Validacion exitosa!")
+
+  const customSubmit = async(data) => {
+      //console.log(data)
+      await fetch(API+'/api/contact/create',{
+      method: 'POST',
+      headers: {"Content-Type": 'application/json'},
+      body: JSON.stringify({
+          nombre: data.name,
+          apellido: data.apellido,
+          telefono: data.telefono,
+          correo: data.correo
+      })
+    }).then((res)=>{console.log(res)})
+    alert("Usuario agregado de manera exitosa!")
   }
 
   return (

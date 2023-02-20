@@ -4,7 +4,7 @@ import Home from './Home/Home';
 import Unauthorized from './Unauthorized/Unauthorized';
 import Layout from './Layout/Layout';
 import About from './About/About';
-import './Nuevo-Contacto/style.css';
+
 
 function App() {
   return (
