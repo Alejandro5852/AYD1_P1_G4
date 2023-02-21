@@ -61,12 +61,18 @@ controller.update = async (req, res) => {
 }
 controller.delete = async (req, res) => {
     const uri = process.env.DB_URI;
+    //Extraemos el id del usuario
+    const _id = req.body._id;
+    
     let mongoClient;
     try {
         mongoClient = await mongoConnection.connectToCluster(uri);
         const db = mongoClient.db('Practica1');
         const collection = db.collection('Contactos');
-        return res.status(200).json({ log: 'Ok' });
+        const query = { _id: new ObjectId(_id) };
+        const resultado = await collection.deleteOne(query);
+        console.log("ID delete: " + _id);
+        return res.status(200).json({ log: 'Ok' , resultado:resultado});
     } catch (err) {
         return res.status(400).json({ codigo: 400, resultado: err });
     } finally {
