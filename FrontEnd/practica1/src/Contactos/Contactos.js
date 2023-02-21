@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Container, Row } from 'react-bootstrap'
 import ModificarContacto from '../Modificar-Contacto/ModificarContacto'
+import EliminarContacto from '../Eliminar-Contacto/EliminarContacto'
 import DEFAULT_URL from '../utils/url';
 
 const API = DEFAULT_URL;
@@ -9,6 +10,7 @@ const Contactos = () => {
 
   const [contactos, setContactos] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpenDelete, setModalOpenDelete] = useState(false);
   const [itemSelected, setItemSelected] = useState(null);
 
   const getContactos = async() => {
@@ -29,10 +31,21 @@ const Contactos = () => {
     setModalOpen(true);
   }
 
+  const callCloseModal = () => {
+    getContactos();
+    setModalOpenDelete(false)
+    setItemSelected(null);
+  }
+
+  const callOpenModal = (item) => {
+    setItemSelected(item);
+    setModalOpenDelete(true);
+  }
+
   useEffect(() => {
     getContactos();
   }, [])
-  
+
   return (
     <>
       <h1>Contactos</h1>
@@ -51,6 +64,9 @@ const Contactos = () => {
                         <Button variant="primary" onClick={() => handleOpenModal(item)}>
                           Editar contacto
                         </Button>
+                        <Button variant="danger" title="Eliminar contacto" onClick={() => callOpenModal(item)}>
+                        Eliminar contacto
+                        </Button>
                       </Card.Body>
                     </Card>
                   </Col>
@@ -63,6 +79,7 @@ const Contactos = () => {
       
 
       <ModificarContacto open={modalOpen} onClose={handleCloseModal} item={itemSelected} />
+      <EliminarContacto open={modalOpenDelete} onClose={callCloseModal} item={itemSelected} />
     </>
   )
 }
