@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { ObjectId } = require('mongodb');
 const mongoConnection = require('../helpers/mongodb');
 const controller = {};
 
@@ -31,7 +32,8 @@ controller.read = async (req, res) => {
         mongoClient = await mongoConnection.connectToCluster(uri);
         const db = mongoClient.db('Practica1');
         const collection = db.collection('Contactos');
-        return res.status(200).json({ log: 'Ok' });
+        const listado = await collection.find().toArray();
+        return res.status(200).json({ contactos: listado });
     } catch (err) {
         return res.status(400).json({ codigo: 400, resultado: err });
     } finally {
@@ -45,8 +47,13 @@ controller.update = async (req, res) => {
         mongoClient = await mongoConnection.connectToCluster(uri);
         const db = mongoClient.db('Practica1');
         const collection = db.collection('Contactos');
-        return res.status(200).json({ log: 'Ok' });
+        const { _id, nombre, apellido, telefono, correo } = req.body;
+        const filter = { _id: new ObjectId(_id) };
+        const update = { $set: { nombre, apellido, telefono, correo } };
+        const result = await collection.updateOne(filter, update);
+        return res.status(200).json(result);
     } catch (err) {
+        console.log(err);
         return res.status(400).json({ codigo: 400, resultado: err });
     } finally {
         await mongoClient.close();
