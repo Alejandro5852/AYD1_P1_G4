@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import {useForm} from 'react-hook-form';
-
+import DEFAULT_URL from '../utils/url';
 import './form.css';
+
+const API = DEFAULT_URL;
+
 
 const ModificarContacto = (props) => {
   
@@ -10,13 +13,27 @@ const ModificarContacto = (props) => {
   const [txtSave, setTxtSave] = useState("Guardar cambios");
   const formRef = useRef(null);
   
-  const customSubmit = (data) => {
+  const customSubmit = async(data) => {
     setTxtSave("Actualizando...");
-    setTimeout(() => {
-      alert("Actualizacion pendiente!");
+
+    await fetch(API+'/api/contact/update',{
+      method: 'PATCH',
+      headers: {"Content-Type": 'application/json'},
+      body: JSON.stringify({
+          _id: data._id,
+          nombre: data.nombre,
+          apellido: data.apellido,
+          telefono: data.telefono,
+          correo: data.correo
+      })
+    }).then((res)=>{
+      alert("Actualizacion completada exitosamente!");
       setTxtSave("Guardar cambios");
       props.onClose();
-    }, 2000);
+    }).catch((err)=>{
+      alert("Error al actualizar el contacto");
+      setTxtSave("Guardar cambios");
+    })
   }
 
   function handleUpdate() {
@@ -37,7 +54,7 @@ const ModificarContacto = (props) => {
           <form id="formUpdate" ref={formRef}  onSubmit={handleSubmit(customSubmit)} className='form-react'>
             <div className='form-control'>
                 <label>Nombre</label>
-                <input type="text" {...register('name', {required:true})} />
+                <input type="text" {...register('nombre', {required:true})} />
                 {errors.name?.type === 'required' && <small className='fail'>El campo no puede estar vacio</small>}
             </div>
             <div className='form-control'>
