@@ -40,6 +40,7 @@ controller.read = async (req, res) => {
         await mongoClient.close();
     }
 }
+
 controller.update = async (req, res) => {
     const uri = process.env.DB_URI;
     let mongoClient;
@@ -59,6 +60,7 @@ controller.update = async (req, res) => {
         await mongoClient.close();
     }
 }
+
 controller.delete = async (req, res) => {
     const uri = process.env.DB_URI;
     //Extraemos el id del usuario
@@ -114,5 +116,27 @@ controller.addfavorite = async (req, res) => {
         await mongoClient.close();
     }
 }
+
+
+controller.deletefavorite = async (req, res) => {
+    const uri = process.env.DB_URI;
+    let mongoClient;
+    try {
+        mongoClient = await mongoConnection.connectToCluster(uri);
+        const db = mongoClient.db('Practica1');
+        const collection = db.collection('Contactos');
+        const { _id, favorito  } = req.body;
+        const filter = { _id: new ObjectId(_id) };
+        const update = { $set: { favorito } };
+        const result = await collection.updateOne(filter, update);
+        return res.status(200).json(result);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).json({ codigo: 400, resultado: err });
+    } finally {
+        await mongoClient.close();
+    }
+}
+
 
 module.exports = controller;
