@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Table, Container } from "reactstrap";
 import DEFAULT_URL from '../utils/url';
+import EliminarFavorito from '../Eliminar-Favorito/EliminarFavorito'
+
+import {Button} from 'react-bootstrap'
 
 const API = DEFAULT_URL;
 
@@ -19,6 +22,19 @@ const MisFavoritos = () => {
     getContactos();
   }, [])
 
+  const [itemSelected, setItemSelected] = useState(null);
+  const [modalOpenDelete, setModalOpenDelete] = useState(false);
+ 
+  const callOpenModal = (item) => {
+    setItemSelected(item);
+    setModalOpenDelete(true);
+  }
+
+  const callCloseModal = () => {
+    getContactos();
+    setModalOpenDelete(false)
+    setItemSelected(null);
+  }
 
   return (
     <>
@@ -43,12 +59,14 @@ const MisFavoritos = () => {
                   <td>{contacto.apellido}</td>
                   <td>{contacto.telefono}</td>
                   <td>{contacto.correo}</td>
+                  <td>  <Button variant="danger" itle="Eliminar favorito" onClick={() => callOpenModal(contacto)}> Eliminar </Button>  </td>
                 </tr>
               ) : null
             ))}
           </tbody>
         </Table>
       </Container>
+      <EliminarFavorito open={modalOpenDelete} onClose={callCloseModal} item={itemSelected} />
     </>
   )
 }
