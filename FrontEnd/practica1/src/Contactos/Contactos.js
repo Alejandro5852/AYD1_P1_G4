@@ -42,6 +42,23 @@ const Contactos = () => {
     setModalOpenDelete(true);
   }
 
+  const addFavorite = async(item) => {
+    await fetch(API+'/api/contact/addfavorite',{
+      method: 'PATCH',
+      headers: {"Content-Type": 'application/json'},
+      body: JSON.stringify({
+        _id: item._id,
+        favorito: true
+      })
+    }).then((res)=>{
+      alert("Añadido a favoritos exitosamente!");
+    }).catch((err)=>{
+      alert("Error al Añadir a favoritos");
+    })
+    getContactos();
+  }
+
+
   useEffect(() => {
     getContactos();
   }, [])
@@ -53,11 +70,11 @@ const Contactos = () => {
       <Container>
         <Row >
           {
-            contactos.map((item, index) => {
+            contactos.map((item) => {
               return (
                 <>
                   <Col xs={12}>
-                    <Card style={{ marginBottom: '20px', textAlign: 'left' }} key={index}>
+                    <Card style={{ marginBottom: '20px', textAlign: 'left' }} key={item._id}>
                       <Card.Body>
                         <Card.Title>{item.nombre} {item.apellido}</Card.Title>
                         <Card.Subtitle className="mb-2 text-muted">{item.telefono} - {item.correo}</Card.Subtitle>
@@ -67,6 +84,14 @@ const Contactos = () => {
                         <Button variant="danger" title="Eliminar contacto" onClick={() => callOpenModal(item)}>
                         Eliminar contacto
                         </Button>
+                        {
+                          !item.favorito ? 
+                          (
+                            <Button variant="warning" title="Añadir a favoritos" onClick={() => addFavorite(item)}>
+                              Añadir a favoritos
+                            </Button>
+                          ) : null
+                        }
                       </Card.Body>
                     </Card>
                   </Col>

@@ -6,4 +6,6 @@ router.get('/api/contact/read', mongoDBController.read);
 router.patch('/api/contact/update', mongoDBController.update);
 router.delete('/api/contact/delete', mongoDBController.delete);
 router.get('/api/contact/search/', mongoDBController.search);
+router.patch('/api/contact/addfavorite', mongoDBController.addfavorite);
+
 module.exports = router;
