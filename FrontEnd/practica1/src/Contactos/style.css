@@ -1,0 +1,13 @@
+.search-field{
+    background-color: #0c6cfb!important;
+    display: flex!important;
+    align-items: center!important;
+    justify-content: flex-start;
+    border-radius: 3px;
+    height: 65px;
+}
+input.input-field{
+    width: 96%;
+    height: 70%;
+    margin-left: 2%;
+}
