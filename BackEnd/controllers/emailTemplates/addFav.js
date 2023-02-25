@@ -1,6 +1,6 @@
 const controller = {};
 require('dotenv').config();
-controller.getEmailHTML = () => {
+controller.getEmailHTML = (id) => {
     let date = new Date();
     /*
     Guatemala, ${date.toLocaleString('es-MX', {
